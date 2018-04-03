@@ -26,5 +26,46 @@ namespace NavieMediaPlayer
         {
             this.InitializeComponent();
         }
+
+        private async void MyButton_Click(object sender, RoutedEventArgs e)
+        {
+            await SetLocalMedia();
+        }
+
+        async private System.Threading.Tasks.Task SetLocalMedia()
+        {
+            var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
+
+            openPicker.FileTypeFilter.Add(".mp4");
+            openPicker.FileTypeFilter.Add(".mp3");
+
+            var file = await openPicker.PickSingleFileAsync();
+
+            // mediaPlayer is a MediaElement defined in XAML
+            if (file != null)
+            {
+                var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
+                MyMediaPlayer.SetSource(stream, file.ContentType);
+
+                MyMediaPlayer.Play();
+            }
+        }
+
+        private void MyToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            ToggleSwitch toggleSwitch = sender as ToggleSwitch;
+            if (toggleSwitch != null)
+            {
+                if (toggleSwitch.IsOn == true)
+                {
+                    MyMediaPlayer.TransportControls.IsCompact = false;
+                }
+                else
+                {
+                    MyMediaPlayer.TransportControls.IsCompact = true;
+                }
+            }
+
+        }
     }
 }

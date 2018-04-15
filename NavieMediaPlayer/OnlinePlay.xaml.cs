@@ -71,11 +71,7 @@ namespace NavieMediaPlayer
                 MyMediaPlayer.Play();
 
             }
-            catch (Exception ex)
-            {
-                httpResponseBody = "Error: " + ex.HResult.ToString("X") + " Message: " + ex.Message;
-            }
-
+            catch { }
         }
     }
 }

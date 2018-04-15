@@ -27,45 +27,37 @@ namespace NavieMediaPlayer
             this.InitializeComponent();
         }
 
-        private async void MyButton_Click(object sender, RoutedEventArgs e)
+        private void MyView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
-            await SetLocalMedia();
-        }
-
-        async private System.Threading.Tasks.Task SetLocalMedia()
-        {
-            var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
-
-            openPicker.FileTypeFilter.Add(".mp4");
-            openPicker.FileTypeFilter.Add(".mp3");
-
-            var file = await openPicker.PickSingleFileAsync();
-
-            // mediaPlayer is a MediaElement defined in XAML
-            if (file != null)
+            if (args.IsSettingsSelected)
             {
-                var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
-                MyMediaPlayer.SetSource(stream, file.ContentType);
-
-                MyMediaPlayer.Play();
+                MyFrame.Navigate(typeof(Setting));
             }
-        }
-
-        private void MyToggleSwitch_Toggled(object sender, RoutedEventArgs e)
-        {
-            ToggleSwitch toggleSwitch = sender as ToggleSwitch;
-            if (toggleSwitch != null)
+            else
             {
-                if (toggleSwitch.IsOn == true)
+                NavigationViewItem item =
+                    args.SelectedItem as NavigationViewItem;
+
+                switch (item.Tag)
                 {
-                    MyMediaPlayer.TransportControls.IsCompact = false;
-                }
-                else
-                {
-                    MyMediaPlayer.TransportControls.IsCompact = true;
+                    case "mp3":
+                        MyFrame.Navigate(typeof(LocalPlay));
+                        break;
+
+                    case "mp4":
+                        MyFrame.Navigate(typeof(LocalPlay));
+                        break;
+
+                    case "online":
+                        MyFrame.Navigate(typeof(OnlinePlay));
+                        break;
                 }
             }
+        }
 
+        private void MyHyper_Click(object sender, RoutedEventArgs e)
+        {
+            MyFrame.Navigate(typeof(Setting));
         }
     }
 }
